@@ -48,4 +48,10 @@ def create_app(config_name):
     from app_core.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api/v1')
 
+    from flask_admin import Admin
+    from app_core.core_views import UserView
+    from app_core.models import User
+    admin = Admin(app, url='/records')
+    admin.add_view(UserView(User, db.session))
+
     return app

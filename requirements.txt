@@ -1,3 +1,4 @@
 # This requirements file is used for Production Server
 # Requirements for other configurations are located in the requirements' subdirectory
 -r requirements/prod.txt
+Flask-Admin==1.6.1
