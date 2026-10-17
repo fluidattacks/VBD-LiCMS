@@ -1,0 +1,38 @@
+{% extends "bootstrap_base.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/login.css', _external=True) }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/form-wtf.css', _external=True) }}" rel="stylesheet">
+{% endblock %}
+
+{% block page_content %}
+    <div class="form-wtf p-4 p-md-5 bg-body-tertiary rounded-3 shadow-lg">
+        <div class="d-flex my-3">
+            <div class="col-7 col-md-10 font-weight-normal">
+                <h1>
+                    {% block email_header %}
+                    {% endblock %}
+                </h1>
+                <p class="text-muted">For <b>Li Xin (Justin Lee) Content Management System</b></p>
+            </div>
+            <div class="col-5 col-md-2 justify-content-center align-self-center">
+                <img class="m-2 alert alert-warning shadow-sm" alt="LiCMS Logo" width="128" height="128"
+                     src="{{ url_for('static', filename='img/logo.svg', _external=True) }}">
+            </div>
+        </div>
+        <div class="mb-3">
+            <p>Greetings. {{ user.name }},</p>
+            {% block email_content %}
+            {% endblock %}
+            <p>
+                Best Regards,<br>
+                Justin Lee
+            </p>
+            <p class="text-muted"><small>Note: replies to this email address are not monitored.</small></p>
+        </div>
+        <p class="my-3 text-muted text-center">
+            {% include 'fragments/_copyright.html' %}
+        </p>
+    </div>
+{% endblock %}

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" class="h-100" data-bs-theme="light">
+<head>
+    {% block head %}
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        {% if current_user.is_administrator() %}
+            <meta name="theme-color" media="(prefers-color-scheme: light)" content="#B66DFF">
+            <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#744EC2">
+        {% else %}
+            <meta name="theme-color" media="(prefers-color-scheme: light)" content="#37A794">
+            <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#009292">
+        {% endif %}
+
+        <title>
+            {% block title %}
+                LiCMS
+            {% endblock %}
+        </title>
+
+        {% block styles %}
+            <!-- Bootstrap CSS -->
+            {{ bootstrap.load_css() }}
+        {% endblock %}
+        <link rel="shortcut icon" href="{{ url_for('main.favicon') }}" type="image/x-icon">
+        <link rel="icon" href="{{ url_for('main.favicon') }}" type="image/x-icon">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/color-modes.css', _external=True) }}">
+    {% endblock %}
+</head>
+<body class="d-flex h-100 {% if current_user.is_administrator() %}bg-admin{% endif %}">
+{% include 'fragments/_theme_switcher.html' %}
+{% block navbar %}
+{% endblock %}
+
+<!-- Your page content -->
+{% block content %}
+    <main role="main" class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="notification-area">
+                    {% for category, message in messages %}
+                        <div class="alert alert-dismissible fade show shadow-lg
+                            {% if category == "message" %}
+                                alert-warning
+                            {% else %}
+                                {{ category }}
+                            {% endif %}" role="alert">
+                            <button type="button" class="btn btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block page_content %}
+        {% endblock %}
+    </main>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block scripts %}
+    <!-- Optional JavaScript -->
+    {{ bootstrap.load_js() }}
+    <script src="{{ url_for('static', filename='js/color-modes.js', _external=True) }}"></script>
+{% endblock %}
+</body>
+</html>

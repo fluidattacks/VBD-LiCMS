@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import 'macros/_users.html' as m_users with context %}
+{% import 'macros/_pagination.html' as m_pagination %}
+
+{% block title %}
+    {{ super() }} - {{ title }}
+{% endblock %}
+
+{% block page_content %}
+    {% if users %}
+        {{ m_users.list_widget(title, users) }}
+        {% if user_id %}
+            {{ m_pagination.pagination_widget(pagination, endpoint, user_id=user_id) }}
+        {% else %}
+            {{ m_pagination.pagination_widget(pagination, endpoint) }}
+        {% endif %}
+    {% else %}
+        <div class="p-md-5 pb-md-4 p-4 mb-4 bg-body-tertiary rounded-3">
+            <h1 class="text-muted text-center">No Users Yet.</h1>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,84 @@
+body {
+    padding-top: 7rem;
+    -ms-flex-direction: column !important;
+    flex-direction: column !important;
+    background: linear-gradient(15deg, #64bcf4, #c2e59c) no-repeat fixed;
+}
+
+@media only screen and (max-width: 576px) {
+    body {
+        padding-top: 5.5rem;
+    }
+}
+
+footer {
+    opacity: 75%;
+}
+
+.bg-admin {
+    background: linear-gradient(15deg, #e66465, #9198e5) no-repeat fixed;
+}
+
+.profile {
+    min-height: 270px;
+}
+
+.no-pic-profile {
+    margin-left: 50px;
+}
+
+.user-thumbnail {
+    max-width: 30px;
+    height: auto;
+}
+
+.nav-logo {
+    height: 30px;
+    margin-top: -15px;
+}
+
+.nav-name {
+    margin-left: 5px;
+}
+
+.font-futura {
+    font-family: Futura, serif;
+}
+
+.notification-area {
+}
+
+@media only screen and (max-width: 576px) {
+    .notification-area {
+        top: 7rem;
+    }
+}
+
+@media only screen and (min-width: 576px) {
+    .notification-area {
+        top: 5rem;
+        right: 1rem;
+        position: fixed;
+        max-width: 350px;
+    }
+}
+
+.text-shadow {
+    text-shadow: 2px 2px #AAAAAA;
+}
+
+.easter-egg-logo {
+    transition: .3s;
+}
+
+.easter-egg-logo:hover {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    border-radius: 1rem !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    padding: 25px;
+    margin-bottom: 25px;
+    width: 50%;
+    height: 50%;
+}

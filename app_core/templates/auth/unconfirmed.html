@@ -1,0 +1,35 @@
+{% extends "auth/base_display.html" %}
+
+{% block head %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block title %}{{ super() }} - Account NOT Confirmed{% endblock %}
+
+{% block display_title %}
+    <h1>Hello, {{ current_user.name }}!</h1>
+    <h3>You have <b>NOT</b> confirmed your account yet.</h3>
+{% endblock %}
+
+{% block display_content %}
+    <div class="my-3 alert alert-primary">
+        <h4 class="alert-heading">
+            One more step to LiCMS!
+        </h4>
+        <p>
+            Before you can access this site, you need to confirm your account.<br>
+            Check your inbox, you should have received an email with a confirmation link.
+        </p>
+        <hr>
+        <p class="mb-0">
+            Need another confirmation email?
+            <a class="btn btn-sm btn-primary" href="{{ url_for('auth.resend_confirmation') }}">Click here</a>.
+        </p>
+    </div>
+    <div class="text-muted text-end">
+        <small>
+            Or you can just <a href="{{ url_for('auth.logout') }}">logout</a>.
+        </small>
+    </div>
+{% endblock %}

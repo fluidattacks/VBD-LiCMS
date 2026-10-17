@@ -1,0 +1,66 @@
+{% macro list_widget(title, users, extend=false, link='#', link_text='') %}
+    <div class="p-md-5 pb-md-4 p-4 mb-4 bg-body-tertiary rounded-3">
+        <div class="d-flex flex-column flex-md-row">
+            <h1 class="pb-2 mb-0">{{ title }}</h1>
+        </div>
+
+        {% if users %}
+            {% for user in users %}
+                <div class="d-flex text-muted border-top pt-3">
+                    <img class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="40" height="40"
+                         src="{{ user.gravatar(size=80) }}" alt="Author Gravatar"/>
+                    <div class="pb-3 mb-0 small lh-sm w-100">
+                        <div class="pb-1 d-flex justify-content-between">
+                            <a class="text-decoration-none text-body-secondary fs-6"
+                               href="{{ url_for('main.user', user_id=user.id) }}">
+                                <strong>@{{ user.name }}</strong>
+                            </a>
+                            {% if current_user.is_authenticated and current_user.can(Permission.FOLLOW) and user != current_user %}
+                                {% if not current_user.is_following(user) %}
+                                    <form class="d-inline" method="post" action="{{ url_for('main.follow', user_id=user.id) }}">
+                                        {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+                                        <button type="submit" class="btn btn-sm btn-primary">Follow</button>
+                                    </form>
+                                {% else %}
+                                    <form class="d-inline" method="post" action="{{ url_for('main.unfollow', user_id=user.id) }}">
+                                        {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+                                        <button type="submit" class="btn btn-sm btn-warning">Unfollow</button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        <div class="d-block">
+                            <span class="mb-1 badge rounded-pill text-bg-warning">Gender: {{ user.gender.name }}</span>
+                            <span class="mb-1 badge rounded-pill text-bg-primary">Posts: {{ user.posts.count() }}</span>
+                            <span class="mb-1 badge rounded-pill text-bg-primary">Comments: {{ user.comments.count() }}</span>
+                            <span class="mb-1 badge rounded-pill text-bg-info">Followers: {{ user.followers.count() - 1 }}</span>
+                            <span class="mb-1 badge rounded-pill text-bg-info">Followed: {{ user.followed.count() - 1 }}</span>
+                            <span class="mb-1 badge rounded-pill text-bg-success">Member Since: {{ moment(user.member_since).fromNow() }}</span>
+                        </div>
+                        {% if current_user.is_authenticated %}
+                            <div>
+                                {% if current_user.is_followed_by(user) %}
+                                    <span class="mb-1 badge rounded-pill text-bg-info">follows you since: {{ moment(user.member_since).fromNow() }}</span>
+                                {% endif %}
+                                {% if current_user.is_following(user) %}
+                                    <span class="mb-1 badge rounded-pill text-bg-primary">followed by you since: {{ moment(user.member_since).fromNow() }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+            {% if extend %}
+                <small class="d-block">
+                    <a href="{{ link }}">{{ link_text }}</a>
+                </small>
+            {% endif %}
+        {% else %}
+            <div class="text-muted pt-3">
+                <h3 class="pb-3 mb-0 text-center">
+                    No Trending Users Yet.
+                </h3>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}

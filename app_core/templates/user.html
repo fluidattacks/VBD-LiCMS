@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import 'macros/_posts.html' as m_posts with context %}
+
+{% block title %}
+    {{ super() }} - Profile - {{ user.name }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="p-md-5 pb-md-4 p-4 mb-4 bg-body-tertiary rounded-3 shadow-lg">
+        <div class="row">
+            <div class="col-sm-3 mb-4 mb-sm-0 text-center align-self-center">
+                <img class="img-thumbnail float-left" src="{{ user.gravatar(size=512) }}" alt="user avatar"
+                     width="256" height="256">
+            </div>
+            <div class="profile col-sm-9">
+                <h1>{{ user.name }}</h1>
+                {% if user.about_me %}
+                    <div class="text-muted alert alert-info">
+                        {{ user.about_me }}
+                    </div>
+                {% endif %}
+                <hr>
+                <div class="my-3 ms-2 ms-sm-0">
+                    {% if user.location %}
+                        <div>
+                            Location: <a class="text-decoration-none"
+                                         href="https://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+                        </div>
+                    {% endif %}
+                    {% if current_user.is_administrator() %}
+                        <div>
+                            Email: <a class="text-decoration-none"
+                                      href="mailto:{{ user.email }}">{{ user.email }}</a>
+                        </div>
+                    {% endif %}
+                    <div>
+                        Gender: {{ user.gender.name }}
+                    </div>
+                    <div>
+                        Member since {{ moment(user.member_since).fromNow() }}.
+                        <span class="badge rounded-pill text-bg-success mb-0 ms-1 mt-n1">
+                            {{ moment(user.member_since).format('L') }}
+                        </span>
+                    </div>
+                    <div>
+                        Last seen {{ moment(user.last_seen).fromNow() }}.
+                    </div>
+                    <div class="mt-2">
+                        <a class="text-decoration-none mx-1 badge rounded-pill text-bg-info"
+                           href="{{ url_for('main.followers', user_id=user.id) }}"
+                        >Followers: {{ user.followers.count() - 1 }}</a>
+                        <a class="text-decoration-none mx-1 badge rounded-pill text-bg-info"
+                           href="{{ url_for('main.followed_by', user_id=user.id) }}"
+                        >Following: {{ user.followed.count() - 1 }}</a>
+                        {% if current_user.is_authenticated and user != current_user and user.is_following(current_user) %}
+                            <span class="mx-1">|</span>
+                            {% if not current_user.is_following(user) %}
+                                <span class="badge rounded-pill text-bg-primary">Follows you</span>
+                            {% else %}
+                                <span class="badge rounded-pill text-bg-primary">Follows each other</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row px-3">
+                    {% if current_user.can(Permission.FOLLOW) and user != current_user %}
+                        {% if not current_user.is_following(user) %}
+                            <form method="post" action="{{ url_for('main.follow', user_id=user.id) }}"
+                                  class="me-0 me-sm-2 col-12 col-sm-auto mb-2 mb-sm-0">
+                                {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+                                <button type="submit" class="btn btn-primary w-100">Follow</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{{ url_for('main.unfollow', user_id=user.id) }}"
+                                  class="me-0 me-sm-2 col-12 col-sm-auto mb-2 mb-sm-0">
+                                {% if csrf_token is defined %}<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">{% endif %}
+                                <button type="submit" class="btn btn-warning w-100">Unfollow</button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                    {% if user == current_user %}
+                        <a href="{{ url_for('main.edit_profile') }}"
+                           class="btn btn-primary me-0 me-sm-2 col-12 col-sm-auto mb-2 mb-sm-0">Edit Profile</a>
+                    {% endif %}
+                    {% if current_user.is_administrator() %}
+                        <a href="{{ url_for('main.edit_profile_admin', user_id=user.id) }}"
+                           class="btn btn-danger col-12 col-sm-auto">Admin Edit Profile</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if posts %}
+        {{ m_posts.list_widget("Posts by " + user.name, posts) }}
+    {% else %}
+        <div class="p-4 p-md-5 mb-4 bg-body-tertiary rounded-3">
+            <h1 class="text-muted text-center">No Posts by {{ user.name }} Yet.</h1>
+        </div>
+    {% endif %}
+{% endblock %}

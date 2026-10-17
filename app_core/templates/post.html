@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}
+{% import 'macros/_comments.html' as m_comments with context %}
+{% import 'macros/_pagination.html' as m_pagination %}
+
+{% block title %}
+    {{ super() }} - Post {{ post.id }}
+{% endblock %}
+
+{% block page_content %}
+    <div class="p-md-5 pb-md-4 p-4 mb-4 bg-body-tertiary rounded-3">
+        {% include 'fragments/_post_detail.html' %}
+        <!-- Comments Form -->
+        {% if current_user.can(Permission.COMMENT) %}
+            <div class="card my-4">
+                <h5 class="card-header">Leave a Comment:</h5>
+                <div class="card-body">
+                    {{ render_form(form, button_map={'submit': 'primary'}) }}
+                </div>
+            </div>
+        {% endif %}
+        {{ m_comments.list_widget(comments, page, in_post=true) }}
+        {{ m_pagination.pagination_widget(pagination, endpoint, fragment='#comments', post_id=post.id) }}
+    </div>
+{% endblock %}

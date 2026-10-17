@@ -1,0 +1,2 @@
+-r prod.txt
+psycopg==3.3.6
